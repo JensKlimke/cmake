@@ -5,6 +5,6 @@
 #ifndef CMAKEPROJECT_TWO_H
 #define CMAKEPROJECT_TWO_H
 
-void two();
+bool two();
 
 #endif //CMAKEPROJECT_TWO_H
