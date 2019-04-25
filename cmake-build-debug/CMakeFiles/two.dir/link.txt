@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtwo.a  CMakeFiles/two.dir/src/lib.cpp.o
+/usr/bin/ranlib libtwo.a

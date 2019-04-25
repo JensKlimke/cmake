@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/one/one.h
+
+/mnt/c/Users/klimke/Implementierungen/playground/cmake/src/two.cpp
+iostream
+-
+include/two/two.h
+/mnt/c/Users/klimke/Implementierungen/playground/cmake/src/include/two/two.h
+one/one.h
+-
+
