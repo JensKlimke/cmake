@@ -1,5 +1,0 @@
-/mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug/CMakeFiles/cmake.dir
-/mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug/CMakeFiles/one.dir
-/mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug/CMakeFiles/two.dir

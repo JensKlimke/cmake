@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/cmake.dir/apps/main.cpp.o CMakeFiles/cmake.dir/src/one.cpp.o CMakeFiles/cmake.dir/src/two.cpp.o  -o cmake libtwo.a libone.a 

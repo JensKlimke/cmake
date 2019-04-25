@@ -1,8 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /mnt/c/Users/klimke/Implementierungen/playground/cmake
--- Configuring done
-CMake Error: Cannot determine link language for target "one".
-CMake Error: CMake can not determine linker language for target: one
-CMake Error: Cannot determine link language for target "two".
-CMake Error: CMake can not determine linker language for target: two
--- Generating done
--- Build files have been written to: /mnt/c/Users/klimke/Implementierungen/playground/cmake/cmake-build-debug
