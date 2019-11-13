@@ -22,35 +22,23 @@
 # Created by Jens Klimke on 2019-11-13.
 #
 
-#
-# Configuration
-#
 language: cpp
-dist: trusty
+dist: bionic
+compiler: gcc
 
-#
-# Tokens
-#
-#env:
-#  global:
-#    secure: "TgRM9CGlY1bAVGOQ9KJ35P5tTCu16aOm4Tf9BW24bwwUmBFawz1sQGOUyJq30OzivtMfLTVi9TfObH2kq5uUFnakX6PkCVwxOZLZPO4yKcum2flTnzX5iZsqGxZb0vDT49QQWvJi1HbKsro5ciEuWVXtV66AX6wetS+fp8A4g+ToQkusr1s5ugYq5yc3HKFcwrlNSPdyn7FETQrrFr8kgO/LiBLMRBpEO1zo9s23h4MjSsBr2u9AvE2QJ2C88Vu5yTI8TWNQY9nZV3c5lgwSUXk+y+IZQTmW0LXALglNKbCRftxgjJM6zypw0h9iXSGc+3rVkuVwQfOrFdxyAOr2jBiKbFYB3mxNNc10XZtvRnwn+eEcsXwQ4Hi9jhqN13LciZcoJpKnL9fQp3dUeBehYkCyUQnK6oRxS/ceYQJB05y9IpZq/XnjIL9uXIie7kYtRMNVwVgLmr+cMt5QvJgkiLAhAhLjwhmEt7KX+UQ4x4jDxMJ8NV0azEG4nFr6HvTWHc9PgPjM83HxX+7CGAZy5da6zmZe+FOTlG6lOwCDROqDmmlGPR9e7hZ+JtaMHRZlCN90jiJ7Shszrnwmjv0CJ0WHbCSGreRl00039GuwPNRvqgsgYxrVfYQ0Z6CbA9E1qlluwV02KWJdMk1pcm//KdgMzsleiD4N3MQ/W6Ol2Zs="
+before_install:
+  # Codecov
+  - sudo pip install codecov
 
-
-# preparation
-before_script:
-  - mkdir build
-  - cd build
-
-# use linux
-os:
-  - linux
-
-# Codecov
 script:
   - cmake -DBUILD_TESTS=ON ..
   - make
   - make test
-
+  - ./travis_qmake_gcc_cpp14_gcov
+  # Codecov
+  - ./get_code_cov
+  - codecov
 
 after_success:
+  # Codecov
   - bash <(curl -s https://codecov.io/bash)
