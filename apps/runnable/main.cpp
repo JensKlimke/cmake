@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/two/lib.h"
-#include "../include/one/lib.h"
+#include <two/two.h>
+#include <one/one.h>
 
 int main() {
 

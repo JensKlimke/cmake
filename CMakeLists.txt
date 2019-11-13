@@ -1,32 +1,60 @@
-cmake_minimum_required(VERSION 3.10)
-# based on https://cliutils.gitlab.io/modern-cmake/
+IF (WIN32)
+    cmake_minimum_required(VERSION 3.15)
+    cmake_policy(SET CMP0091 NEW)
+ELSE()
+    cmake_minimum_required(VERSION 3.5)
+ENDIF()
 
-project(cmake VERSION 0.1
-        DESCRIPTION "Example project by Jens Klimke"
-        LANGUAGES CXX)
+# set project title
+project(DummyProject)
 
+# set C++ standard
 set(CMAKE_CXX_STANDARD 14)
 
-
-### Require out-of-source builds
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if(EXISTS "${LOC_PATH}")
-    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
-endif()
-
+# set options
+option(BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
+option(BUILD_APPS "Build the executables of the project" ON)
 
 # add ./cmake to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+# update submodules
+include(UpdateGitSubmodules)
+set(GIT_SUBMODULE OFF)
 
-### GTEST
-enable_testing()
-# TODO: add coverage (https://github.com/CLIUtils/cmake)
+# create and set binary directory
+set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin CACHE PATH "BIN_DIR")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
-
-
+# add sources
 add_subdirectory(src)
-add_subdirectory(tests)
 
-add_executable(${PROJECT_NAME} apps/main.cpp)
-target_link_libraries(${PROJECT_NAME} two)
+# enable google testing for project
+if(BUILD_TESTS)
+
+    message("-- Testing enabled")
+
+    # enable testing
+    enable_testing()
+
+    # unset for all subprojects
+    set(BUILD_TESTS OFF)
+
+    # add gtest sources
+    add_subdirectory(lib/gtest)
+
+    # load macros for test
+    include(AddGoogleTest)
+
+    # add test folder
+    add_subdirectory(test)
+
+endif()
+
+
+if(BUILD_APPS)
+
+    # add subdirectory for apps
+    add_subdirectory(apps)
+
+endif(BUILD_APPS)
