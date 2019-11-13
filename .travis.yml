@@ -50,7 +50,6 @@ script:
   - cmake -DBUILD_TESTS=ON -DCMAKE_CXX_COMPILER="g++-6" ..
   - make
   - make test
-  - cd ..
 
 #addons:
 #  apt:
