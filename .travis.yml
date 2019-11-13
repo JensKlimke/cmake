@@ -53,9 +53,9 @@ script:
   - cd ..
   - bash <(curl -s https://codecov.io/bash)
 
-addons:
-  apt:
-    packages: lcov
+#addons:
+#  apt:
+#    packages: lcov
 
 after_success:
   # Create lcov report
