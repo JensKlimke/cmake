@@ -47,7 +47,7 @@ os:
 
 # Codecov
 script:
-  - cmake -DBUILD_TESTS=ON -DCMAKE_CXX_COMPILER="g++-6" ..
+  - cmake -DBUILD_TESTS=ON ..
   - make
   - make test
 
