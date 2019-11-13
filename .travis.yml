@@ -55,6 +55,9 @@ script:
 #  apt:
 #    packages: lcov
 
+env:
+  CODECOV_TOKEN=091dbffc-5b63-4c21-ad5d-015410fe18c5
+
 after_success:
   # Create lcov report
   - lcov --capture --directory . --output-file coverage.info
