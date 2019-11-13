@@ -47,7 +47,7 @@ os:
 
 # Codecov
 script:
-  - cmake -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER="g++-6" ..
+  - cmake -DENABLE_COVERAGE=ON -DBUILD_TESTS=ON -DCMAKE_CXX_COMPILER="g++-6" ..
   - make
   - make test
   - cd ..
