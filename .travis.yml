@@ -1,0 +1,66 @@
+#
+# Copyright (c) 2019 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+# Created by Jens Klimke on 2019-11-13.
+#
+
+#
+# Configuration
+#
+language: cpp
+dist: trusty
+
+#
+# Tokens
+#
+#env:
+#  global:
+#    secure: "TgRM9CGlY1bAVGOQ9KJ35P5tTCu16aOm4Tf9BW24bwwUmBFawz1sQGOUyJq30OzivtMfLTVi9TfObH2kq5uUFnakX6PkCVwxOZLZPO4yKcum2flTnzX5iZsqGxZb0vDT49QQWvJi1HbKsro5ciEuWVXtV66AX6wetS+fp8A4g+ToQkusr1s5ugYq5yc3HKFcwrlNSPdyn7FETQrrFr8kgO/LiBLMRBpEO1zo9s23h4MjSsBr2u9AvE2QJ2C88Vu5yTI8TWNQY9nZV3c5lgwSUXk+y+IZQTmW0LXALglNKbCRftxgjJM6zypw0h9iXSGc+3rVkuVwQfOrFdxyAOr2jBiKbFYB3mxNNc10XZtvRnwn+eEcsXwQ4Hi9jhqN13LciZcoJpKnL9fQp3dUeBehYkCyUQnK6oRxS/ceYQJB05y9IpZq/XnjIL9uXIie7kYtRMNVwVgLmr+cMt5QvJgkiLAhAhLjwhmEt7KX+UQ4x4jDxMJ8NV0azEG4nFr6HvTWHc9PgPjM83HxX+7CGAZy5da6zmZe+FOTlG6lOwCDROqDmmlGPR9e7hZ+JtaMHRZlCN90jiJ7Shszrnwmjv0CJ0WHbCSGreRl00039GuwPNRvqgsgYxrVfYQ0Z6CbA9E1qlluwV02KWJdMk1pcm//KdgMzsleiD4N3MQ/W6Ol2Zs="
+
+
+# preparation
+before_script:
+  - mkdir build
+  - cd build
+
+
+matrix:
+  include:
+
+  #
+  # Codecov
+  #
+  - os: linux
+  env:
+    - TEST="Codecov"
+  addons:
+    apt:
+      sources:
+        - ubuntu-toolchain-r-test
+      packages:
+        - gcc-6
+        - g++-6
+  script:
+    - cmake -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER="g++-6" ..
+    - make
+    - make test
+    - cd ..
+    - bash <(curl -s https://codecov.io/bash)
