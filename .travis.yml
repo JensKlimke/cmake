@@ -51,7 +51,6 @@ script:
   - make
   - make test
   - cd ..
-  - bash <(curl -s https://codecov.io/bash)
 
 #addons:
 #  apt:
