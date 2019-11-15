@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2019 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,30 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// Created by Jens Klimke on 2019-04-25.
+// Created by Jens Klimke on 14.11.2019.
 //
 
-#include <gtest/gtest.h>
-#include <one/one.h>
-#include <two/two.h>
-#include <three/three.h>
 
-TEST(SimpleTest, OneTest) {
+/**
+ * @file three.h
+ *
+ * This file demonstrates how to create a shared lib file
+ *
+ */
 
-    EXPECT_TRUE(one());
+
+#ifndef DUMMYPROJECT_THREE_H
+#define DUMMYPROJECT_THREE_H
+
+
+#ifdef _WIN32
+    #ifdef THREELIB_EXPORTS
+        #define SHARED_EXPORT __declspec(dllexport)
+    #else
+        #define SHARED_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define SHARED_EXPORT
+#endif
+
+
+extern "C" {
+
+namespace threelib {
+
+    /**
+     * Adds the value b to the value a
+     * @param a A pointer to a value, the value b will be added to. a will be overwritten.
+     * @param b The value added to the value a.
+     * @return Error code (0 = no error, 1 = an error)
+     */
+    SHARED_EXPORT int add(double *a, double b);
+
+
+} // namespace threelib
 
 }
 
-TEST(SimpleTest, TwoTest) {
 
-    EXPECT_FALSE(two());
-
-}
-
-TEST(SimpleTest, ThreeTest) {
-
-    double a = 10.0;
-    double b =  5.0;
-
-    threelib::add(&a, b);
-}
+#endif //DUMMYPROJECT_THREE_H

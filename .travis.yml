@@ -1,0 +1,33 @@
+language: cpp
+
+######################
+# Operating systems
+######################
+os:
+  - linux
+  - osx
+
+
+######################
+# Compilers
+######################
+compiler:
+  - gcc
+  - clang
+
+
+before_script:
+  ######################
+  # Create build directory
+  ######################
+  - mkdir build
+  - cd build
+
+
+script:
+  ######################
+  # cmake and build
+  ######################
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -BUILD_DOCS=OFF ..
+  - make
+  - make test

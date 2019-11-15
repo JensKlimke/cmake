@@ -1,9 +1,4 @@
-IF (WIN32)
-    cmake_minimum_required(VERSION 3.15)
-    cmake_policy(SET CMP0091 NEW)
-ELSE()
-    cmake_minimum_required(VERSION 3.5)
-ENDIF()
+cmake_minimum_required(VERSION 3.5)
 
 # set project title
 project(DummyProject)
@@ -21,6 +16,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # update submodules
 include(UpdateGitSubmodules)
 set(GIT_SUBMODULE OFF)
+
+# load macros for docs
+set(DOC_SOURCE_FOLDERS "${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src")
+include(GenerateDocs)
 
 # create and set binary directory
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin CACHE PATH "BIN_DIR")

@@ -6,16 +6,10 @@ set(SOURCE_FILES
 add_executable(SimpleTest ${SOURCE_FILES})
 
 # include directory
-target_include_directories(SimpleTest PRIVATE
-        ${PROJECT_SOURCE_DIR}/include/two # headers for library
-        ${PROJECT_SOURCE_DIR}/include)    # other libraries
+target_include_directories(SimpleTest PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 # link librarym to target
-target_link_libraries(SimpleTest PRIVATE two)
-
-# set runtime library
-set_property(TARGET SimpleTest PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+target_link_libraries(SimpleTest PRIVATE two three) # don't need to link "one", because linked by two
 
 # add test
 add_gtest(SimpleTest)

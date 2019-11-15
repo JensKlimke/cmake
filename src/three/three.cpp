@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2019 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,30 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// Created by Jens Klimke on 2019-04-25.
+// Created by Jens Klimke on 14.11.2019.
 //
 
-#include <gtest/gtest.h>
-#include <one/one.h>
-#include <two/two.h>
-#include <three/three.h>
 
-TEST(SimpleTest, OneTest) {
+#include "three.h"
 
-    EXPECT_TRUE(one());
+namespace threelib {
 
-}
+    int add(double *a, double b) {
 
-TEST(SimpleTest, TwoTest) {
+        // check
+        if(a == nullptr)
+            return 1;
 
-    EXPECT_FALSE(two());
+        // operation
+        *a += b;
 
-}
+        return 0;
 
-TEST(SimpleTest, ThreeTest) {
+    }
 
-    double a = 10.0;
-    double b =  5.0;
-
-    threelib::add(&a, b);
 }
