@@ -7,8 +7,9 @@ project(DummyProject)
 set(CMAKE_CXX_STANDARD 14)
 
 # set options
-option(BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
 option(BUILD_APPS "Build the executables of the project" ON)
+option(BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
+option(ENABLE_COVERAGE "Enable the coverage check of the module" OFF)
 
 # add ./cmake to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -25,8 +26,34 @@ include(GenerateDocs)
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin CACHE PATH "BIN_DIR")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
+
+
+# ------------------------------------------------------------------------------
+# core sources
+# ------------------------------------------------------------------------------
+
 # add sources
 add_subdirectory(src)
+
+
+
+# ------------------------------------------------------------------------------
+# Apps
+# ------------------------------------------------------------------------------
+
+# enable apps of the project
+if(BUILD_APPS)
+
+    # add subdirectory for apps
+    add_subdirectory(apps)
+
+endif(BUILD_APPS)
+
+
+
+# ------------------------------------------------------------------------------
+# Tests
+# ------------------------------------------------------------------------------
 
 # enable google testing for project
 if(BUILD_TESTS)
@@ -50,10 +77,3 @@ if(BUILD_TESTS)
 
 endif()
 
-
-if(BUILD_APPS)
-
-    # add subdirectory for apps
-    add_subdirectory(apps)
-
-endif(BUILD_APPS)
