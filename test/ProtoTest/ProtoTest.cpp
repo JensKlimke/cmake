@@ -22,15 +22,16 @@
 // Created by Jens Klimke on 2019-04-25.
 //
 
-#include <iostream>
-#include <one/one.h>
-#include "two.h"
+#include <gtest/gtest.h>
+#include <proto/proto.h>
 
-bool two() {
+TEST(ProtoTest, LoadModel) {
 
-    one();
-    std::cout << "TWO" << std::endl;
+    PID_controller pid;
 
-    return false;
+    pid.setParameters(2.0, 1.0, 1.0);
+
+
+    EXPECT_TRUE(true);
 
 }

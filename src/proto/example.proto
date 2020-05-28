@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package simulation.models;
+
+
+message PID {
+
+    message Parameters {
+        double k_P = 1;
+        double k_I = 2;
+        double k_D = 3;
+    }
+
+    message Inputs {
+        double x = 1;
+        bool reset = 2;
+    }
+
+    message States {
+        double x_prev = 1;
+        double x_int = 2;
+    }
+
+    message Outputs {
+        double y = 1;
+    }
+
+    string name = 1;
+    string id = 2;
+
+    Parameters parameters = 3;
+    Inputs inputs = 4;
+    States states = 5;
+    Outputs outputs = 6;
+
+}
+
+
+message Sum {
+
+    string name = 1;
+    string id = 2;
+
+    message Addend {
+        bool plus = 1;
+    }
+
+    message Inputs {
+        repeated Addend x = 1;
+    }
+
+    message Outputs {
+        double y = 1;
+    }
+
+}

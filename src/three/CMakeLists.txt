@@ -8,6 +8,6 @@ add_definitions(-DTHREELIB_EXPORTS)
 
 # include directory
 target_include_directories(three PRIVATE
-        ${PROJECT_SOURCE_DIR}/include/three # headers for library
-        ${PROJECT_SOURCE_DIR}/include)      # other libraries
+        ${PROJECT_SOURCE_DIR}/src/three # headers for library
+        ${PROJECT_SOURCE_DIR}/src)      # other libraries
 

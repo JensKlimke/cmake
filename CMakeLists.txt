@@ -1,79 +1,83 @@
 cmake_minimum_required(VERSION 3.5)
 
 # set project title
-project(DummyProject)
+project(DummyProject VERSION 0.0.1)
 
 # set C++ standard
 set(CMAKE_CXX_STANDARD 14)
 
 # set options
-option(BUILD_APPS "Build the executables of the project" ON)
-option(BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
-option(ENABLE_COVERAGE "Enable the coverage check of the module" OFF)
+option(DUMMY_BUILD_APPS "Builds the executables of the project" ON)
+option(DUMMY_BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
+option(DUMMY_ENABLE_PROTOBUF "Enables the protocol buffer functionality" OFF)
+option(DUMMY_ENABLE_COVERAGE "Enables the coverage check of the module" OFF)
+option(DUMMY_CREATE_DOXYGEN_TARGET "Enable to create a doxygen target" OFF)
 
 # add ./cmake to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-# update submodules
-include(UpdateGitSubmodules)
-set(GIT_SUBMODULE OFF)
 
-# load macros for docs
-set(DOC_SOURCE_FOLDERS "${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src")
-include(GenerateDocs)
+# ------------------------------------------------------------------------------
+# DOCUMENTATION
+# ------------------------------------------------------------------------------
+if(DUMMY_CREATE_DOXYGEN_TARGET)
 
-# create and set binary directory
-set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin CACHE PATH "BIN_DIR")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+    # exclude pattern
+    set(DOCYGEN_EXCLUDE_PATTERN "")
+
+    # load module for doxygen target
+    include(ModuleDoxygen)
+
+endif(DUMMY_CREATE_DOXYGEN_TARGET)
 
 
 
 # ------------------------------------------------------------------------------
-# core sources
+# COVERAGE
+# ------------------------------------------------------------------------------
+if (BUILD_FOR_COVERAGE)
+
+    # load module for coverage
+    include(ModuleCoverage)
+
+endif (BUILD_FOR_COVERAGE)
+
+
+
+# ------------------------------------------------------------------------------
+# PROTOBUF
+# ------------------------------------------------------------------------------
+include(ModuleProtobuf)
+
+
+
+# ------------------------------------------------------------------------------
+# CORE SOURCES
 # ------------------------------------------------------------------------------
 
-# add sources
+# add source folder
 add_subdirectory(src)
 
 
 
 # ------------------------------------------------------------------------------
-# Apps
+# APPS
 # ------------------------------------------------------------------------------
-
-# enable apps of the project
-if(BUILD_APPS)
+if(DUMMY_BUILD_APPS)
 
     # add subdirectory for apps
     add_subdirectory(apps)
 
-endif(BUILD_APPS)
+endif(DUMMY_BUILD_APPS)
 
 
 
 # ------------------------------------------------------------------------------
-# Tests
+# TESTING
 # ------------------------------------------------------------------------------
+if(DUMMY_BUILD_TESTS)
 
-# enable google testing for project
-if(BUILD_TESTS)
+    # load module for testing
+    include(ModuleGtest)
 
-    message("-- Testing enabled")
-
-    # enable testing
-    enable_testing()
-
-    # unset for all subprojects
-    set(BUILD_TESTS OFF)
-
-    # add gtest sources
-    add_subdirectory(lib/gtest)
-
-    # load macros for test
-    include(AddGoogleTest)
-
-    # add test folder
-    add_subdirectory(test)
-
-endif()
-
+endif(DUMMY_BUILD_TESTS)

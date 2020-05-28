@@ -1,5 +1,4 @@
-//
-// Copyright (c) 2019 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
+// Copyright (c) 2020 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// Created by Jens Klimke on 2019-04-25.
+// Created by Jens Klimke on 28.05.2020.
 //
 
-#include <iostream>
-#include <one/one.h>
-#include "two.h"
 
-bool two() {
-
-    one();
-    std::cout << "TWO" << std::endl;
-
-    return false;
-
-}

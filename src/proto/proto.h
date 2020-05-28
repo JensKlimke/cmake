@@ -23,14 +23,54 @@
 //
 
 #include <iostream>
-#include <one/one.h>
-#include "two.h"
+#include <example.pb.h>
 
-bool two() {
+class PID_controller {
 
-    one();
-    std::cout << "TWO" << std::endl;
+private:
 
-    return false;
+    simulation::models::PID _data{};
+    simulation::models::PID::Parameters *parameters;
 
-}
+public:
+
+    PID_controller() = default;
+    ~PID_controller() = default;
+
+    void create() {
+
+        _data.mutable_parameters()->set_k_p(0.0);
+
+    }
+
+
+    void step(double simTime, double timeStepSize) {
+
+
+    }
+
+
+    void setIDAndName(std::string &&id, std::string &&name) {
+
+        // set name and ID
+        _data.set_name(name);
+        _data.set_name(id);
+
+    }
+
+    void setParameters(double kP, double kI, double kD) {
+
+        // set parameters
+        _data.mutable_parameters()->set_k_p(kP);
+        _data.mutable_parameters()->set_k_i(kI);
+        _data.mutable_parameters()->set_k_d(kD);
+
+        // overwrite parameters
+        parameters->set_k_p(10.0);
+
+        // set parameters
+        std::cout << ">" << _data.parameters().k_p() << std::endl;
+
+    }
+
+};
