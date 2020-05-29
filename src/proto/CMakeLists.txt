@@ -4,7 +4,8 @@ set(SOURCE_FILES
 
 # set proto files
 set(PROTO_FIULES
-        example.proto)
+        example.proto
+        simulation.proto)
 
 # generate proto files
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FIULES})

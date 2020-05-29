@@ -23,12 +23,36 @@
 //
 
 #include <gtest/gtest.h>
-#include <proto/proto.h>
+#include <Simulation/Model.h>
 
-TEST(ProtoTest, LoadModel) {
 
-    PID_controller pid;
+class TestModel : public sim::Model<double>, public ::testing::Test {
 
-    EXPECT_TRUE(true);
+protected:
+
+    void SetUp() override {
+
+    }
+
+public:
+
+    bool create() override {
+        return true;
+    }
+
+    void reset() override {
+
+    }
+
+    bool step(double simTime, double timeStepSize) override {
+        return true;
+    }
+
+};
+
+
+TEST_F(TestModel, ModelTest) {
+
+    
 
 }

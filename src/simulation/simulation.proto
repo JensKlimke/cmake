@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package simulation;
+
+message Model {
+
+    string name = 1;
+    string id = 2;
+
+}

@@ -25,12 +25,26 @@
 #include <iostream>
 #include <example.pb.h>
 
+
 class PID_controller {
 
 private:
 
-    simulation::models::PID _data{};
-    simulation::models::PID::Parameters *parameters;
+    typedef simulation::models::PID::Parameters _proto_param;
+
+    double kP;
+    double kI;
+    double kD;
+
+    double xInt;
+    double x0;
+
+    double x;
+    double y;
+
+    bool resetFlag;
+
+    constexpr static const double EPS_TIME_STEP_SIZE = 1e-9;
 
 public:
 
@@ -39,38 +53,54 @@ public:
 
     void create() {
 
-        _data.mutable_parameters()->set_k_p(0.0);
+        // set parameters
+        this->setParameters(0.0, 0.0, 0.0);
+
+    }
+
+    void reset() {
+
+        xInt = 0.0;
+        x0 = 0.0;
+
+        resetFlag = true;
+
+    }
+
+
+
+    void setInput(double err, bool reset = false) {
+
+        this->x = err;
+        this->resetFlag = reset;
 
     }
 
 
     void step(double simTime, double timeStepSize) {
 
+        // no derivation calculation
+        bool r = resetFlag || (timeStepSize <= EPS_TIME_STEP_SIZE);
+
+        // parameters and inputs
+        xInt += x * timeStepSize;
+        double dx = r ? 0.0 : (x - x0) / timeStepSize;
+
+        // calculation
+        this->y = kP * x + kI * xInt + kD * x0;
+
+        // set memory
+        x0 = x;
+        resetFlag = false;
 
     }
 
-
-    void setIDAndName(std::string &&id, std::string &&name) {
-
-        // set name and ID
-        _data.set_name(name);
-        _data.set_name(id);
-
-    }
-
-    void setParameters(double kP, double kI, double kD) {
+    void setParameters(double P, double I, double D) {
 
         // set parameters
-        _data.mutable_parameters()->set_k_p(kP);
-        _data.mutable_parameters()->set_k_i(kI);
-        _data.mutable_parameters()->set_k_d(kD);
-
-        // overwrite parameters
-        parameters->set_k_p(10.0);
-
-        // set parameters
-        std::cout << ">" << _data.parameters().k_p() << std::endl;
-
+        this->kP = P;
+        this->kI = I;
+        this->kD = D;
     }
 
 };

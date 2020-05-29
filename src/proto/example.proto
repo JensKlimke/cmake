@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package simulation.models;
 
+message Model {
+
+    string name = 1;
+    string id = 2;
+
+}
 
 message PID {
 
@@ -17,7 +23,7 @@ message PID {
     }
 
     message States {
-        double x_prev = 1;
+        double x_0 = 1;
         double x_int = 2;
     }
 
@@ -25,32 +31,25 @@ message PID {
         double y = 1;
     }
 
-    string name = 1;
-    string id = 2;
-
-    Parameters parameters = 3;
-    Inputs inputs = 4;
-    States states = 5;
-    Outputs outputs = 6;
+    Parameters parameters = 1;
+    Inputs inputs = 2;
+    States states = 3;
+    Outputs outputs = 4;
 
 }
 
 
 message Sum {
 
-    string name = 1;
-    string id = 2;
-
-    message Addend {
-        bool plus = 1;
-    }
-
     message Inputs {
-        repeated Addend x = 1;
+        repeated bool plus = 1;
     }
 
     message Outputs {
         double y = 1;
     }
+
+    Inputs inputs = 2;
+    Outputs outputs = 4;
 
 }
