@@ -23,7 +23,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <Simulation/Model.h>
+#include <simulation/Model.h>
 
 
 class TestModel : public sim::Model<double>, public ::testing::Test {

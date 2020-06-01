@@ -17,8 +17,6 @@ target_link_libraries(simulation PRIVATE
         ${Protobuf_LIBRARIES}
 )
 
-message(${CMAKE_BINARY_DIR})
-
 # include directory
 target_include_directories(simulation PUBLIC
         ${CMAKE_BINARY_DIR}/src/simulation    # protobuf generated content

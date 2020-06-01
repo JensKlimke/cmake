@@ -136,6 +136,9 @@ namespace sim {
             // reset states
             this->reset();
 
+            // standard
+            return true;
+
         }
 
 
@@ -185,7 +188,13 @@ namespace sim {
                 // save time
                 this->_lastExecTime = simTime;
 
+                // step performed
+                return true;
+
             }
+
+            // step not performed
+            return false;
 
         }
 

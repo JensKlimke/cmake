@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD 14)
 # set options
 option(DUMMY_BUILD_APPS "Builds the executables of the project" ON)
 option(DUMMY_BUILD_TESTS "Sets or unsets the option to generate the test target" OFF)
-option(DUMMY_ENABLE_PROTOBUF "Enables the protocol buffer functionality" OFF)
 option(DUMMY_ENABLE_COVERAGE "Enables the coverage check of the module" OFF)
 option(DUMMY_CREATE_DOXYGEN_TARGET "Enable to create a doxygen target" OFF)
 

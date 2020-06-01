@@ -14,7 +14,7 @@ option(GTEST_BUILD_LIBRARY "Enables gtest to be built from the submodule" ON)
 macro(add_gtest TESTNAME)
 
     # link library
-    target_link_libraries(${TESTNAME} PRIVATE gtest gmock gtest_main)
+    target_link_libraries(${TESTNAME} PRIVATE ${GTEST_BOTH_LIBRARIES})
     target_include_directories(${TESTNAME} PRIVATE ${GTEST_INCLUDE_DIRS})
 
     if(GOOGLE_TEST_INDIVIDUAL)
@@ -29,7 +29,6 @@ macro(add_gtest TESTNAME)
                     PROPERTIES FOLDER "Tests")
         endif()
     else()
-        #add_test(${TESTNAME} ${TESTNAME})
         add_test(NAME ${TESTNAME} COMMAND $<TARGET_FILE:${TESTNAME}>)
         set_target_properties(${TESTNAME} PROPERTIES FOLDER "Tests")
     endif()
@@ -48,13 +47,15 @@ if(GTEST_BUILD_LIBRARY)
 
     # add gtest sources
     add_subdirectory(lib/gtest)
-    set(GTEST_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/googletest/googletest/include)
 
-else(GTEST_BUILD_LIBRARY)
+    # set variables
+    set(GTEST_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/googletest/googletest/include)
+    set(GTEST_BOTH_LIBRARIES gtest gtest_main)
+
+else()
 
     # find gtest
     find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
 
 endif(GTEST_BUILD_LIBRARY)
 
