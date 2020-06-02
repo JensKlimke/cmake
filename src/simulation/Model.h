@@ -44,24 +44,26 @@ namespace sim {
         //!< Time tracking origin
         enum class TimeTrackingOriginMode {FROM_START, FROM_LAST_STEP};
 
-
-    private:
-
-         simulation::Model _model{}; //!< The protobuf meta data container of the model
-
-        bool _isActive = false;               //!< Flag indicating whether the model is active
-        double _startExecTime = 0.0;          //!< The first sim time point to execute the model
-        double _timeStepSize = 1.0;           //!< Execution time step size
-        double _lastExecTime = INFINITY;      //!< The next time to execute the model
-        double _originTime = 0.0;             //!< The time from which the time tracking shall be done
-        unsigned int _noOfExecutionSteps = 0; //!< Execution step counter from the last reset
-        TimeTrackingOriginMode _timeTrackingOriginMode = TimeTrackingOriginMode::FROM_LAST_STEP; //!< Time tracking mode
-
-        constexpr static const double EPS_TIME_STEP_SIZE = 1e-9; //!< The minimum time step size
+        //!< Enum to define the model state
+        enum class ModelState {INSTANTIATED, CREATED, INITIALIZED, RUNNING, PAUSED, DESTROYED};
 
     protected:
 
-        proto _data{}; //!< The protobuf data container of the model
+        bool _isActive = false;                //!< Flag indicating whether the model is active
+        double _startExecTime{};               //!< The first sim time point to execute the model
+        double _timeStepSize{};                //!< Execution time step size
+        double _lastExecTime{};                //!< The next time to execute the model
+        double _originTime{};                  //!< The time from which the time tracking shall be done
+        unsigned long _noOfExecutionSteps = 0; //!< Execution step counter from the last reset
+
+        TimeTrackingOriginMode _timeTrackingOriginMode
+            = TimeTrackingOriginMode::FROM_LAST_STEP; //!< Time tracking mode
+        ModelState _state = ModelState::INSTANTIATED; //!< Model state
+
+        constexpr static const double EPS_TIME_STEP_SIZE = 1e-9; //!< The minimum time step size
+
+        simulation::Model _meta{}; //!< The protobuf meta data container of the model
+        proto _data{};             //!< The protobuf data container of the model
 
 
     public:
@@ -81,8 +83,30 @@ namespace sim {
         void setIDAndName(std::string &&id, std::string &&name) {
 
             // set name and ID
-            _model.set_name(std::move(name));
-            _model.set_name(std::move(id));
+            _meta.set_name(std::move(name));
+            _meta.set_id(std::move(id));
+
+        }
+
+
+        /**
+         * Returns the ID of the model
+         * @return ID
+         */
+        const std::string &getID() const {
+
+            return _meta.id();
+
+        }
+
+
+        /**
+         * Returns the name of the model
+         * @return Name
+         */
+        const std::string &getName() const {
+
+            return _meta.name();
 
         }
 
@@ -98,24 +122,92 @@ namespace sim {
          *
          * @return Success flag
          */
-        virtual bool create() = 0;
+        virtual bool create() {
+
+            // check state
+            if(_state != ModelState::INSTANTIATED)
+                throw std::runtime_error("Model was created already.");
+
+            // set state
+            _state = ModelState::CREATED;
+
+            // defaults
+            _startExecTime = 0.0;
+            _timeStepSize = 1.0;
+
+            // success
+            return true;
+
+        }
 
 
         /**
-         * @brief Sets the time step size of the model and otionally the first execution time
+         * @brief Sets the time tracking origin mode
          *
-         * Before this process, the model shall be created (@see create())
+         * * FROM_START:     The absolute time is tracked from the start of the model. This mode should be used,
+         *                   when the exact step count is important or when real-time, pseudo-real-time or accelerated
+         *                   real-time simulations are performed. Delayed steps are caught up step by step until the
+         *                   times are synchronized. This mode is also called asynchronous mode, because the model does
+         *                   not run synchronized to the time server steps.
+         * * FROM_LAST_STEP: The relative time is tracked from the last execution step. This mode should be used, when
+         *                   the time steps shall be as equal as possible or the time tracking is very exact.
+         *                   However, the error between actual simulation time and time step size times no of steps
+         *                   might increase due to accumulated error. The mode is also called synchronized mode, because
+         *                   the model runs synchronized to the time server steps.
          *
-         * @param timeStepSize The time step size
-         * @param startExecTime The first execution time
+         *
+         * @param mode The time tracking origin mode
          */
-        virtual void setTimeStepSize(double timeStepSize, double startExecTime = 0.0) {
+        virtual void setTimeTrackingOriginMode(TimeTrackingOriginMode mode) {
+
+            // check state
+            if(_state != ModelState::CREATED)
+                throw std::runtime_error("");
+
+            // set mode
+            _timeTrackingOriginMode = mode;
+
+        }
+
+
+        /**
+         * @brief Sets the start execution time.
+         *
+         * Use this method, if you don't want to start the model to be executed from the very beginning. This setting
+         * can be changed before each initialization. The model must be created
+         *
+         * @param startExecTime Start execution time
+         */
+        virtual void setStartExecutionTime(double startExecTime) {
+
+            // check state
+            if(_state != ModelState::CREATED)
+                throw std::runtime_error("Setup only possible before initialization (state = CREATED).");
 
             // start time
             this->_startExecTime = startExecTime;
 
+        }
+
+
+        /**
+         * @brief Sets the time step size of the model and optionally the first execution time
+         *
+         * Before this process, the model shall be created (@see create())
+         *
+         * @param timeStepSize The time step size
+         */
+        virtual void setTimeStepSize(double timeStepSize) {
+
+            // check state
+            if(_state != ModelState::CREATED)
+                throw std::runtime_error("The model must be created first.");
+
             // time step size
             this->_timeStepSize = timeStepSize;
+
+            // set active
+            this->_isActive = true;
 
         }
 
@@ -133,8 +225,20 @@ namespace sim {
          */
         virtual bool initialize(double simTime) {
 
+            // check state
+            if(_state == ModelState::INSTANTIATED)
+                throw std::runtime_error("Model must be created before initialization.");
+            else if(_state != ModelState::CREATED)
+                throw std::runtime_error("Model must be terminated before initialization.");
+
+            // set state
+            _state = ModelState::INITIALIZED;
+
             // reset states
             this->reset();
+
+            // set last execution time to minus inf
+            _lastExecTime = -1.0 * INFINITY;
 
             // standard
             return true;
@@ -160,10 +264,26 @@ namespace sim {
          * @param simTime Actual simulation time
          * @return Flag indicating if the step shall be executed
          */
-        virtual bool isStepTime(double simTime) {
+        virtual bool isStepTime(double simTime) const {
 
-            return simTime > this->_startExecTime - EPS_TIME_STEP_SIZE
-                   && simTime > _lastExecTime + _timeStepSize - EPS_TIME_STEP_SIZE;
+            // dependent on mode
+            bool time2run = _timeTrackingOriginMode == TimeTrackingOriginMode::FROM_LAST_STEP
+                    ? simTime > _lastExecTime + _timeStepSize - EPS_TIME_STEP_SIZE
+                    : simTime > _startExecTime + _noOfExecutionSteps * _timeStepSize - EPS_TIME_STEP_SIZE;
+
+            // check
+            return (simTime > _startExecTime - EPS_TIME_STEP_SIZE) && time2run;
+
+        }
+
+
+        /**
+         * Returns true when the model is active
+         * @return Active flag
+         */
+        virtual bool isActive() const {
+
+            return _isActive;
 
         }
 
@@ -180,9 +300,17 @@ namespace sim {
          */
         virtual bool simStep(double simTime) {
 
-            if (isStepTime(simTime)) {
+            // check state
+            if(_state != ModelState::INITIALIZED && _state != ModelState::RUNNING)
+                throw std::runtime_error("Model must be initialized before execution.");
+
+            // set state
+            _state = ModelState::RUNNING;
+
+            if (isStepTime(simTime) && isActive()) {
 
                 // execute simulation
+                this->_noOfExecutionSteps++;
                 this->step(simTime, simTime - this->_lastExecTime);
 
                 // save time
@@ -216,7 +344,7 @@ namespace sim {
          *
          * @return Success flag
          */
-        bool activate() {
+        void activate() {
 
             // reset the model
             this->reset();
@@ -225,7 +353,7 @@ namespace sim {
             _noOfExecutionSteps = 0;
 
             // activate
-            this->_isActive = false;
+            _isActive = true;
 
         }
 
@@ -234,10 +362,55 @@ namespace sim {
          * @brief Deactivates the model.
          * @return Success flag
          */
-        bool deactivate() {
+        void deactivate() {
 
             // deactivate
-            this->_isActive = false;
+            _isActive = false;
+
+        }
+
+
+        /**
+         * @brief This model terminates the model for the actual simulation.
+         *
+         * @param simTime Simulation time at termination
+         * @return Success flag
+         */
+        virtual bool terminate(double simTime) {
+
+            // check state
+            if(_state != ModelState::INITIALIZED && _state != ModelState::RUNNING)
+                throw std::runtime_error("Model cannot be terminated, when not initialized.");
+
+            // set state
+            _state = ModelState::CREATED;
+
+            // success
+            return true;
+
+        }
+
+
+        /**
+         * @brief This method destroys the model.
+         *
+         * After conduction the destruction, the model cannot be used in a simulation, even not, when create process is
+         * started. The model is removed from all indexes. However the data stored in the model instance is still
+         * available and should be accessible.
+         *
+         * @return Success flag
+         */
+        virtual bool destroy() {
+
+            // check state
+            if(_state != ModelState::CREATED)
+                throw std::runtime_error("Model can only be destroyed when terminated or created.");
+
+            // set state
+            _state = ModelState::DESTROYED;
+
+            // success
+            return true;
 
         }
 

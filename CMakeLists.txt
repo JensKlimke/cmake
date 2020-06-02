@@ -34,12 +34,12 @@ endif(DUMMY_CREATE_DOXYGEN_TARGET)
 # ------------------------------------------------------------------------------
 # COVERAGE
 # ------------------------------------------------------------------------------
-if (BUILD_FOR_COVERAGE)
+if (DUMMY_ENABLE_COVERAGE)
 
     # load module for coverage
     include(ModuleCoverage)
 
-endif (BUILD_FOR_COVERAGE)
+endif (DUMMY_ENABLE_COVERAGE)
 
 
 
