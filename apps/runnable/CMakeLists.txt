@@ -7,7 +7,8 @@ add_executable(runnable ${SOURCE_FILES})
 
 # include directory
 target_include_directories(runnable PRIVATE
-            ${PROJECT_SOURCE_DIR}/include  # other libraries
+        ../../lib/cxxopts/include      # cxxopts
+        ${PROJECT_SOURCE_DIR}/include  # other libraries
         )
 
 # link librarym to target
