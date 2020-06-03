@@ -20,7 +20,7 @@ compiler:
 # Install dependencies
 ######################
 install:
-  - sudo ./install_protobuf.sh
+  - ./install_protobuf.sh
 
 
 ######################
