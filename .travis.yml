@@ -16,18 +16,28 @@ compiler:
   - clang
 
 
+######################
+# Install dependencies
+######################
+install:
+  - sudo apt-get install autoconf automake libtool curl make g++ unzip
+  - git clone https://github.com/protocolbuffers/protobuf.git
+  - pushd protobuf && git submodule update --init --recursive && ./autogen.sh && popd
+  - ./configure --prefix=/usr && make && make check && sudo make install && sudo ldconfig
+
+
+######################
+# Create build directory
+######################
 before_script:
-  ######################
-  # Create build directory
-  ######################
   - mkdir build
   - cd build
 
 
+######################
+# cmake and build
+######################
 script:
-  ######################
-  # cmake and build
-  ######################
   - cmake -DCMAKE_BUILD_TYPE=Debug -DDUMMY_BUILD_TESTS=ON ..
   - make
   - make test
