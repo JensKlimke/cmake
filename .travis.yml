@@ -20,9 +20,7 @@ compiler:
 # Install dependencies
 ######################
 install:
-  - sudo apt-get install autoconf automake libtool curl make g++ unzip
-  - git clone https://github.com/protocolbuffers/protobuf.git
-  - cd protobuf && mkdir build && cd build && cmake ../cmake && make && make install
+  - ./ci/install-protobuf.sh
 
 
 ######################
