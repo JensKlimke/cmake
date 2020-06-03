@@ -22,8 +22,7 @@ compiler:
 install:
   - sudo apt-get install autoconf automake libtool curl make g++ unzip
   - git clone https://github.com/protocolbuffers/protobuf.git
-  - pushd protobuf && git submodule update --init --recursive && ./autogen.sh && popd
-  - ./configure --prefix=/usr && make && make check && sudo make install && sudo ldconfig
+  - cd protobuf && mkdir build && cd build && cmake ../cmake && make && make install
 
 
 ######################
