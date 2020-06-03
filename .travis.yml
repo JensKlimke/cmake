@@ -20,7 +20,7 @@ compiler:
 # Install dependencies
 ######################
 install:
-  - ./ci/install-protobuf.sh
+  - ./ci/install_protobuf.sh
 
 
 ######################
