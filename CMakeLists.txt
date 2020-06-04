@@ -44,9 +44,10 @@ endif (DUMMY_ENABLE_COVERAGE)
 
 
 # ------------------------------------------------------------------------------
-# PROTOBUF
+# MODULES
 # ------------------------------------------------------------------------------
 include(ModuleProtobuf)
+# include(ModulePahoMQTTClient)
 
 
 

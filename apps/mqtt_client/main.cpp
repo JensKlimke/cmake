@@ -1,48 +1,66 @@
-/*
- * Sources from: https://www.eclipse.org/paho/clients/c/
- */
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <thread>	// For sleep
+#include <atomic>
+#include <chrono>
+#include <cstring>
+#include "mqtt/async_client.h"
 
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "MQTTClient.h"
+using namespace std;
 
-#define ADDRESS     "tcp://localhost:1883"
-#define CLIENTID    "ExampleClientPub"
-#define TOPIC       "MQTTEX"
-#define PAYLOAD     "Hello World!"
-#define QOS         1
-#define TIMEOUT     10000L
+const string DFLT_SERVER_ADDRESS { "tcp://localhost:1883" };
+
+const string TOPIC { "test" };
+const int QOS = 1;
+
+const char* PAYLOADS[] = {
+        "Hello World!",
+        "Hi there!",
+        "Is anyone listening?",
+        "Someone is always listening.",
+        nullptr
+};
+
+const auto TIMEOUT = std::chrono::seconds(10);
+
+/////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[])
 {
-    MQTTClient client;
-    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
-    MQTTClient_message pubmsg = MQTTClient_message_initializer;
-    MQTTClient_deliveryToken token;
-    int rc;
+    string address = (argc > 1) ? string(argv[1]) : DFLT_SERVER_ADDRESS;
 
-    MQTTClient_create(&client, ADDRESS, CLIENTID,
-                      MQTTCLIENT_PERSISTENCE_NONE, NULL);
-    conn_opts.keepAliveInterval = 20;
-    conn_opts.cleansession = 1;
+    cout << "Initializing for server '" << address << "'..." << endl;
+    mqtt::async_client cli(address, "");
 
-    if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
-    {
-        printf("Failed to connect, return code %d\n", rc);
-        exit(-1);
+    cout << "  ...OK" << endl;
+
+    try {
+        cout << "\nConnecting..." << endl;
+        cli.connect()->wait();
+        cout << "  ...OK" << endl;
+
+        cout << "\nPublishing messages..." << endl;
+
+        mqtt::topic top(cli, "test", QOS);
+        mqtt::token_ptr tok;
+
+        size_t i = 0;
+        while (PAYLOADS[i]) {
+            tok = top.publish(PAYLOADS[i++]);
+        }
+        tok->wait();	// Just wait for the last one to complete.
+        cout << "OK" << endl;
+
+        // Disconnect
+        cout << "\nDisconnecting..." << endl;
+        cli.disconnect()->wait();
+        cout << "  ...OK" << endl;
     }
-    pubmsg.payload = (void*)"Hello World";
-    pubmsg.payloadlen = strlen(PAYLOAD);
-    pubmsg.qos = QOS;
-    pubmsg.retained = 0;
-    MQTTClient_publishMessage(client, TOPIC, &pubmsg, &token);
-    printf("Waiting for up to %d seconds for publication of %s\n"
-           "on topic %s for client with ClientID: %s\n",
-           (int)(TIMEOUT/1000), PAYLOAD, TOPIC, CLIENTID);
-    rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
-    printf("Message with delivery token %d delivered\n", token);
-    MQTTClient_disconnect(client, 10000);
-    MQTTClient_destroy(&client);
-    return rc;
+    catch (const mqtt::exception& exc) {
+        cerr << exc.what() << endl;
+        return 1;
+    }
+
+    return 0;
 }
