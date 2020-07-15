@@ -47,7 +47,8 @@ endif (DUMMY_ENABLE_COVERAGE)
 # MODULES
 # ------------------------------------------------------------------------------
 include(ModuleProtobuf)
-# include(ModulePahoMQTTClient)
+include(ModuleGrpc)
+include(ModulePahoMQTTClient)
 
 
 
@@ -55,10 +56,11 @@ include(ModuleProtobuf)
 # CORE SOURCES
 # ------------------------------------------------------------------------------
 
+# source as include directory
+include_directories(${PROJECT_SOURCE_DIR}/src)
+
 # add source folder
 add_subdirectory(src)
-
-
 
 # ------------------------------------------------------------------------------
 # APPS

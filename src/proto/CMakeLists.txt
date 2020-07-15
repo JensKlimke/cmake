@@ -1,14 +1,16 @@
 # set source files
 set(SOURCE_FILES
-        proto.h)
+        PID_controller.cpp
+        PID_controller.h
+    )
 
 # set proto files
-set(PROTO_FIULES
-        example.proto
-        simulation.proto)
+set(PROTO_FILES
+        Models.proto
+    )
 
 # generate proto files
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FIULES})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 
 # create target
 add_library(proto STATIC
@@ -17,12 +19,13 @@ add_library(proto STATIC
         ${PROTO_HDRS}
         )
 
-target_link_libraries(proto PRIVATE
+# link libraries
+target_link_libraries(proto PUBLIC
         ${Protobuf_LIBRARIES}
 )
 
 # include directory
 target_include_directories(proto PRIVATE
         ${PROJECT_SOURCE_DIR}/src
-        ${CMAKE_BINARY_DIR}/src/proto
+        ${CMAKE_BINARY_DIR}/src
 )

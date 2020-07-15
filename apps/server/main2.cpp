@@ -1,8 +1,4 @@
 #include <iostream>
-
-#include <two/two.h>
-#include <one/one.h>
-
 #include <cxxopts.hpp>
 
 int main(int argc, char* argv[]) {
@@ -36,9 +32,6 @@ int main(int argc, char* argv[]) {
     std::cout << "debug: " << (debug ? "yes" : "no") << std::endl;
     std::cout << "bar: " << bar << std::endl;
     std::cout << "foo: " << foo << std::endl;
-
-    one();
-    two();
 
     std::cout << "Hello, World!" << std::endl;
     return 0;

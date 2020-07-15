@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package test.ex;
+
+message Example {
+
+    message Parameters {
+        double k_P = 1;
+        double k_I = 2;
+        double k_D = 3;
+    }
+
+    Parameters parameters = 1;
+
+}

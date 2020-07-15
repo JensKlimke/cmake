@@ -4,7 +4,3 @@ set(SOURCE_FILES
 
 # create target
 add_library(one STATIC ${SOURCE_FILES})
-
-# include directory
-target_include_directories(one PRIVATE
-        ${PROJECT_SOURCE_DIR}/include/one)

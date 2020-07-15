@@ -1,6 +1,6 @@
 
 # message
-message("-- Coverage option is enabled")
+message(STATUS "Coverage option is enabled")
 
 # gnu or clang
 if (CMAKE_COMPILER_IS_GNUCXX)

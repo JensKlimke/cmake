@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2019 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
+// Copyright (c) 2020 Jens Klimke <jens.klimke@rwth-aachen.de>. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// Created by Jens Klimke on 2019-04-25.
+// Created by Jens Klimke on 2020-07-12.
 //
 
 #include <iostream>
-#include <example.pb.h>
-
 
 class PID_controller {
 
-private:
-
-    typedef simulation::models::PID::Parameters _proto_param;
+protected:
 
     double kP;
     double kI;
@@ -51,56 +47,20 @@ public:
     PID_controller() = default;
     ~PID_controller() = default;
 
-    void create() {
+    void create();
 
-        // set parameters
-        this->setParameters(0.0, 0.0, 0.0);
+    void reset();
 
-    }
+    void setInput(double err, bool reset = false);
 
-    void reset() {
+    void step(double simTime, double timeStepSize);
 
-        xInt = 0.0;
-        x0 = 0.0;
+    void setParameters(double P, double I, double D);
 
-        resetFlag = true;
+    double getOutput() const;
 
-    }
+    void save() const;
 
-
-
-    void setInput(double err, bool reset = false) {
-
-        this->x = err;
-        this->resetFlag = reset;
-
-    }
-
-
-    void step(double simTime, double timeStepSize) {
-
-        // no derivation calculation
-        bool r = resetFlag || (timeStepSize <= EPS_TIME_STEP_SIZE);
-
-        // parameters and inputs
-        xInt += x * timeStepSize;
-        double dx = r ? 0.0 : (x - x0) / timeStepSize;
-
-        // calculation
-        this->y = kP * x + kI * xInt + kD * x0;
-
-        // set memory
-        x0 = x;
-        resetFlag = false;
-
-    }
-
-    void setParameters(double P, double I, double D) {
-
-        // set parameters
-        this->kP = P;
-        this->kI = I;
-        this->kD = D;
-    }
+    void load();
 
 };

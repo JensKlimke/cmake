@@ -10,7 +10,7 @@ target_include_directories(SimulationTest PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         )
 
-# link librarym to target
+# link library to target
 target_link_libraries(SimulationTest PRIVATE
         simulation)
 

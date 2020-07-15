@@ -3,7 +3,6 @@ set(PROTO_FILES simulation.proto)
 
 # generate proto files
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
-message("-- protobuf generated headers: " ${PROTO_HDRS})
 
 # create target
 add_library(simulation STATIC

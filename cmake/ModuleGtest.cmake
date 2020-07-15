@@ -37,7 +37,7 @@ endmacro()
 
 
 # message
-message("-- Testing (gtest) enabled")
+message(STATUS "Testing (gtest) enabled")
 
 # enable testing
 enable_testing()

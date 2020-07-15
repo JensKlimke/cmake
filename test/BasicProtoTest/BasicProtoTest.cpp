@@ -23,12 +23,43 @@
 //
 
 #include <gtest/gtest.h>
-#include <proto/proto.h>
+#include <ProtoTest/Example.pb.h>
+#include <fstream>
 
-TEST(ProtoTest, LoadModel) {
 
-    PID_controller pid;
+TEST(ProtoTest, SaveAndLoadModel) {
 
-    EXPECT_TRUE(true);
+    using namespace std;
+
+    // create model
+    test::ex::Example pid{};
+    test::ex::Example pidIn{};
+
+    // set params
+    pid.mutable_parameters()->set_k_p(1.0);
+    pid.mutable_parameters()->set_k_i(0.1);
+    pid.mutable_parameters()->set_k_d(0.2);
+
+    {
+
+        // Write the new address book back to disk.
+        fstream output("test.bin", ios::out | ios::trunc | ios::binary);
+        ASSERT_TRUE(pid.SerializeToOstream(&output));
+
+    }
+
+    {
+
+        // Read the existing address book.
+        fstream input("test.bin", ios::in | ios::binary);
+        ASSERT_TRUE(input);
+        ASSERT_TRUE(pidIn.ParseFromIstream(&input));
+
+    }
+
+    // check content
+    EXPECT_DOUBLE_EQ(1.0, pidIn.parameters().k_p());
+    EXPECT_DOUBLE_EQ(0.1, pidIn.parameters().k_i());
+    EXPECT_DOUBLE_EQ(0.2, pidIn.parameters().k_d());
 
 }

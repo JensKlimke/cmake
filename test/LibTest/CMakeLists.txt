@@ -9,7 +9,7 @@ add_executable(LibTest ${SOURCE_FILES})
 target_include_directories(LibTest PRIVATE
         ${PROJECT_SOURCE_DIR}/include)
 
-# link librarym to target
+# link library to target
 target_link_libraries(LibTest PRIVATE
         two
         three

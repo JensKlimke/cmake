@@ -1,4 +1,5 @@
 add_subdirectory(LibTest)
-#add_subdirectory(ProtoTest)
+add_subdirectory(BasicProtoTest)
+add_subdirectory(ModelProtoTest)
 add_subdirectory(SimulationTest)
 add_subdirectory(ThreadTest)

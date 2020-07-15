@@ -1,5 +1,5 @@
 # message
-message("-- Enabling protobuf")
+message(STATUS "Enabling protobuf")
 
 # find protobuf
 find_package(Protobuf REQUIRED)

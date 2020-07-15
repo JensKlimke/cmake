@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package simulation.models;
+
+
+service RemoteController {
+    rpc CreateUnit (VehicleDefinition) returns (VehicleState) {}
+    rpc SendRequest (VehicleInput) returns (VehicleState) {}
+}
+
+
+message VehicleDefinition {
+
+    uint32 id = 1;
+
+}
+
+message VehicleInput {
+
+    double pedal = 1;
+
+}
+
+message VehicleState {
+
+    double distance = 1;
+    double velocity = 2;
+    double acceleration = 3;
+
+}
+
+
+message PID {
+
+    message Parameters {
+        double k_P = 1;
+        double k_I = 2;
+        double k_D = 3;
+    }
+
+    message Inputs {
+        double x = 1;
+        bool reset = 2;
+    }
+
+    message States {
+        double x_0 = 1;
+        double x_int = 2;
+        bool reset = 3;
+    }
+
+    message Outputs {
+        double y = 1;
+    }
+
+    Parameters parameters = 1;
+    Inputs inputs = 2;
+    States states = 3;
+    Outputs outputs = 4;
+
+}
